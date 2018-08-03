@@ -1,0 +1,48 @@
+{
+  "name": "factorio-render",
+  "version": "1.0.0",
+  "description": "Tool to render Factorio blueprints into static images and videos.",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "files": [
+    "dist/**"
+  ],
+  "scripts": {
+    "dev": "ts-node-dev --respawn --no-notify src/index.ts",
+    "build": "tsc",
+    "lint": "tslint",
+    "doc": "typedoc --name factorio-render --readme README.md --out docs/ src/",
+    "helper": "ts-node-dev src/helper.ts"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/BlooperDB/factorio-render.git"
+  },
+  "keywords": [
+    "factorio",
+    "render",
+    "blueprint",
+    "canvas"
+  ],
+  "author": "BlooperDB <contact@blooper.io>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/BlooperDB/factorio-render/issues"
+  },
+  "homepage": "https://github.com/BlooperDB/factorio-render#readme",
+  "devDependencies": {
+    "ts-node": "^7.0.0",
+    "ts-node-dev": "^1.0.0-pre.26",
+    "tslint": "^5.11.0",
+    "typedoc": "^0.11.1",
+    "typescript": "^3.0.1"
+  },
+  "dependencies": {
+    "@types/node": "^10.5.5",
+    "@types/pako": "^1.0.0",
+    "@types/text-encoding": "0.0.33",
+    "canvas": "^2.0.0-alpha.12",
+    "pako": "^1.0.6",
+    "text-encoding": "^0.6.4"
+  }
+}
