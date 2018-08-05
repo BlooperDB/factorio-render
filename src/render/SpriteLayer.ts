@@ -1,5 +1,5 @@
 import { Canvas, loadImage } from "canvas";
-import { imageToCanvas, cropCanvas } from "../util/image";
+import { cropCanvas, imageToCanvas } from "../util/image";
 
 export interface ISpriteLayerData {
   filename: string;
@@ -19,12 +19,18 @@ export interface ISpriteLayerData {
 
 export default class SpriteLayer {
 
-  public static async from(data: ISpriteLayerData, highRes: boolean = false) {
+  public static async from(data: ISpriteLayerData, highRes: boolean = false): Promise<SpriteLayer> {
     let spriteData = data;
 
-    if (highRes && data.hr_version) spriteData = data.hr_version;
+    if (highRes && data.hr_version) {
+      spriteData = data.hr_version;
+    }
 
-    const spritesheet = await loadImage(spriteData.filename);
+    let file = spriteData.filename;
+    file = file.replace(/__(.+?)__/, "$1");
+    file = "factorio/" + file;
+
+    const spritesheet = await loadImage(file);
     const spritesheetCanvas = imageToCanvas(spritesheet);
 
     const frames: Canvas[] = [];
@@ -32,15 +38,17 @@ export default class SpriteLayer {
     let column = 0;
     let row = 0;
 
-    for (let frame = 0; frame < data.frame_count; frame++) {
-      column = frame % data.line_length;
-      if (frame > 0 && column === 0) row++;
+    for (let frame = 0; frame < spriteData.frame_count; frame++) {
+      column = frame % spriteData.line_length;
+      if (frame > 0 && column === 0) {
+        row++;
+      }
 
       // TODO test Math.floor vs Math.round
-      const x = column * data.width + Math.floor(data.shift.x * column);
-      const y = row * data.height + Math.floor(data.shift.y * row);
+      const x = column * spriteData.width + Math.floor(spriteData.shift.x * column);
+      const y = row * spriteData.height + Math.floor(spriteData.shift.y * row);
 
-      frames.push(cropCanvas(spritesheetCanvas, x, y, data.width, data.height));
+      frames.push(cropCanvas(spritesheetCanvas, x, y, spriteData.width, spriteData.height));
     }
 
     return new SpriteLayer(frames);
