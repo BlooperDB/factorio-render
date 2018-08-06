@@ -14,12 +14,12 @@ export interface BlueprintEntity {
   entity_number: number;
   name: string;
   position: Vector;
-  direction: number;
+  direction?: number;
 }
 
 export interface BlueprintData {
-  icons: BlueprintIcon[];
-  entities: BlueprintEntity[];
+  icons: Array<BlueprintIcon>;
+  entities: Array<BlueprintEntity>;
   item: string;
   version: number;
 }

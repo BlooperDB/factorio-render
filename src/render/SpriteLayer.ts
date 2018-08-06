@@ -6,14 +6,14 @@ export interface ISpriteLayerData {
   priority: string;
   width: number;
   height: number;
-  frame_count: number;
-  line_length: number;
   shift: {
     x: number;
     y: number;
   };
-  scale?: number;
 
+  frame_count?: number;
+  line_length?: number;
+  scale?: number;
   hr_version?: ISpriteLayerData;
 }
 
@@ -33,13 +33,13 @@ export default class SpriteLayer {
     const spritesheet = await loadImage(file);
     const spritesheetCanvas = imageToCanvas(spritesheet);
 
-    const frames: Canvas[] = [];
+    const frames: Array<Canvas> = [];
 
     let column = 0;
     let row = 0;
 
-    for (let frame = 0; frame < spriteData.frame_count; frame++) {
-      column = frame % spriteData.line_length;
+    for (let frame = 0; frame < spriteData.frame_count!; frame++) {
+      column = frame % spriteData.line_length!;
       if (frame > 0 && column === 0) {
         row++;
       }
@@ -54,9 +54,9 @@ export default class SpriteLayer {
     return new SpriteLayer(frames);
   }
 
-  private frames: Canvas[];
+  private frames: Array<Canvas>;
 
-  constructor(frames: Canvas[]) {
+  constructor(frames: Array<Canvas>) {
     this.frames = frames;
   }
 

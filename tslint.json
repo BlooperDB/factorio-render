@@ -39,6 +39,7 @@
     "interface-name": false,
     "prefer-for-of": false,
     "max-line-length": false,
-    "array-type": [true, "generic"]
+    "array-type": [true, "generic"],
+    "max-classes-per-file": false
   }
 }

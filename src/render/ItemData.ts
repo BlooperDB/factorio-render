@@ -1,8 +1,9 @@
 import * as fs from "fs";
-import SpriteLayer from "./SpriteLayer";
+import { Entity } from "../models";
 
 let data: { [key: string]: any; };
 let categoryMapping: { [key: string]: string; };
+let entities: { [key: string]: Entity; };
 
 export function getData(): { [key: string]: any; } {
   if (!data) {
@@ -29,37 +30,17 @@ export function getCategoryMapping() {
   return categoryMapping;
 }
 
-export function getTileData(tile: string): { [key: string]: any; } | undefined {
-  if (!getCategoryMapping()[tile]) {
-    return undefined;
-  }
-
-  return {
-    entity: getData()[getCategoryMapping()[tile]][tile],
-    recipe: getData().recipe[tile],
-    item: getData().item[tile]
-  };
-}
-
-export class ItemData {
-
-  private readonly tile: string;
-  private readonly tileData: any;
-
-  constructor(tile: string) {
-    this.tile = tile;
-    this.tileData = getTileData(tile);
-    if (!this.tileData) {
-      throw new Error("Tile '" + tile + "' not found!");
-    }
-  }
-
-  public getSprite() {
-    SpriteLayer.from(this.tileData.entity.animation.layers[0], true).then((spriteLayer) => {
-      spriteLayer.getFrames().forEach((frame, index) => {
-        fs.writeFile(`output/${index}.png`, frame.toBuffer(), () => undefined);
-      });
+export function getEntity(entity: string): Entity | undefined {
+  if (!entities) {
+    entities = {};
+    Object.keys(getCategoryMapping()).forEach((ent) => {
+      entities[ent] = new Entity(
+        getData()[getCategoryMapping()[ent]][ent],
+        getData().recipe[ent],
+        getData().item[ent]
+      );
     });
   }
 
+  return entities[entity];
 }
