@@ -41,7 +41,7 @@ export class Blueprint {
     this.blueprint = blueprint;
   }
 
-  public async render(file: string) {
+  public async render(file: string, frame: number = 0) {
     const scaling = 32;
     const size = this.getSize();
     const canvas = createCanvas((size.width + 2) * scaling, (size.height + 2) * scaling);
@@ -97,42 +97,61 @@ export class Blueprint {
       const relativeX = position.x + Math.abs(size.minX) + 0.5;
       const relativeY = position.y + Math.abs(size.minY) + 0.5;
 
-      const sprite = await getEntity(entity.name)!.getSprite(entity);
+      const sprite = await getEntity(entity.name)!.getSprite(entity, true, false, false, frame);
 
-      if (!sprite) {
+      if (sprite && sprite.image) {
+        const startX = Math.floor((relativeX * scaling + (scaling / 2)) - (sprite.image.width / 2));
+        const startY = Math.floor((relativeY * scaling + (scaling / 2)) - (sprite.image.height / 2));
+        ctx.drawImage(sprite.image, startX, startY, sprite.image.width, sprite.image.height);
+      }
+    }
+
+    // Third pass: entities
+    for (let i = 0; i < this.blueprint.entities.length; i++) {
+      const entity = this.blueprint.entities[i];
+      const position = entity.position;
+
+      const relativeX = position.x + Math.abs(size.minX) + 0.5;
+      const relativeY = position.y + Math.abs(size.minY) + 0.5;
+
+      const sprite = await getEntity(entity.name)!.getSprite(entity, false, false, false, frame);
+
+      if (!sprite || !sprite.image) {
         const startX = (relativeX * scaling + (scaling / 2)) - 10;
         const startY = (relativeY * scaling + (scaling / 2)) - 10;
         ctx.fillRect(startX, startY, 20, 20);
       } else {
-        const startX = Math.round((relativeX * scaling + (scaling / 2)) - (sprite.width / 2));
-        const startY = Math.round((relativeY * scaling + (scaling / 2)) - (sprite.height / 2));
-        ctx.drawImage(sprite, startX, startY, sprite.width, sprite.height);
+        const startX = Math.floor((relativeX * scaling + (scaling / 2)) - (sprite.image.width / 2));
+        const startY = Math.floor((relativeY * scaling + (scaling / 2)) - (sprite.image.height / 2));
+        ctx.drawImage(sprite.image, startX, startY, sprite.image.width, sprite.image.height);
       }
+    }
 
-      /*
-      grid.setCenter(position.x, position.y);
+    // Fourth pass: overlay
+    for (let i = 0; i < this.blueprint.entities.length; i++) {
+      const entity = this.blueprint.entities[i];
+      const position = entity.position;
 
-      let image;
+      const relativeX = position.x + Math.abs(size.minX) + 0.5;
+      const relativeY = position.y + Math.abs(size.minY) + 0.5;
 
-      if (renderers[entity.name] !== undefined) {
-        image = cachedRenderer(entity, gridView, imageResolver, true);
-      } else {
-        image = imageResolver(entity.name, true);
+      const sprite = await getEntity(entity.name)!.getSprite(entity, false, true, false, frame);
+
+      if (sprite && sprite.image) {
+        const startX = Math.floor((relativeX * scaling + (scaling / 2)) - (sprite.image.width / 2));
+        const startY = Math.floor((relativeY * scaling + (scaling / 2)) - (sprite.image.height / 2));
+        ctx.drawImage(sprite.image, startX, startY, sprite.image.width, sprite.image.height);
       }
-
-      if (image) {
-        const startX = (relativeX * scaling + (scaling / 2)) - (image.width / 2);
-        const startY = (relativeY * scaling + (scaling / 2)) - (image.height / 2);
-        ctx.drawImage(image, startX, startY, image.width, image.height);
-      }
-      */
     }
 
     const out = fs.createWriteStream(file);
     const stream = canvas.pngStream();
+    stream.pipe(out);
 
-    stream.on("data", (chunk: any) => {
-      out.write(chunk);
+    return new Promise((resolve, reject) => {
+      out.on("finish", () => {
+        resolve();
+      });
     });
   }
 

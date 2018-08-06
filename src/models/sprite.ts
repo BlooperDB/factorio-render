@@ -11,6 +11,9 @@ export interface SpriteData {
 
   x?: number;
   y?: number;
+  draw_as_shadow?: boolean;
+  frames?: number;
+  direction_count?: number;
   frame_count?: number;
   line_length?: number;
   scale?: number;
