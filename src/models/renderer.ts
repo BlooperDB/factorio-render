@@ -1,6 +1,6 @@
+import { BlueprintEntity, RenderPassType } from ".";
 import { EntityGridView } from "../render/Blueprint";
-import { EntitySprite } from "./entity";
-import { BlueprintEntity, RenderPassType } from "./index";
+import { EntitySprite } from "./entity/entity";
 
 export interface Renderer {
 

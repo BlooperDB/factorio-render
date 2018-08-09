@@ -8,7 +8,7 @@
     "dist/**"
   ],
   "scripts": {
-    "dev": "ts-node-dev --respawn --no-notify src/index.ts",
+    "dev": "ts-node src/index.ts",
     "webpack": "webpack --mode production",
     "build": "tsc",
     "lint": "tslint",

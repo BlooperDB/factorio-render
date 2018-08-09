@@ -1,13 +1,15 @@
 import { Image } from "canvas";
-import { EntityGridView } from "../render/Blueprint";
-import GenericRenderer from "../render/renderers/generic.renderer";
-import TransportBeltRenderer from "../render/renderers/transport-belt.renderer";
-import UndergroundBeltRenderer from "../render/renderers/underground-belt.renderer";
-import { BlueprintEntity } from "./blueprint";
-import { Vector } from "./index";
-import { RenderPassType } from "./pass";
-import { Renderer } from "./renderer";
-import { SpriteData } from "./sprite";
+import { Vector } from "..";
+import { EntityGridView } from "../../render/Blueprint";
+import GenericRenderer from "../../render/renderers/generic.renderer";
+import PipeRenderer from "../../render/renderers/pipe.renderer";
+import TransportBeltRenderer from "../../render/renderers/transport-belt.renderer";
+import UndergroundBeltRenderer from "../../render/renderers/underground-belt.renderer";
+import { BlueprintEntity } from "../blueprint";
+import { RenderPassType } from "../pass";
+import { Renderer } from "../renderer";
+import { SpriteData } from "../sprite";
+import { PicturesTypes, PictureTypes } from "./entity-pictures";
 
 export interface RecipeData {
   type: string;
@@ -35,16 +37,6 @@ export interface ItemData {
   place_result: string;
   flags: Array<string>;
 }
-
-type PictureTypes = SpriteData |
-  { layers: Array<SpriteData> } |
-  { sheets: Array<SpriteData> } |
-  { north: PictureTypes, east: PictureTypes, south: PictureTypes, west: PictureTypes };
-
-type PicturesTypes = PictureTypes |
-  SpriteData |
-  { picture: PictureTypes } |
-  { left: SpriteData, right: SpriteData, up: SpriteData, down: SpriteData };
 
 type SpriteTypes = SpriteData |
   { layers: Array<SpriteData> };
@@ -92,7 +84,7 @@ export interface EntitySprite {
 }
 
 const renderers: { [key: string]: Renderer | undefined; } = {
-  "pipe": undefined,
+  "pipe": new PipeRenderer(),
   "stone-wall": undefined,
   "straight-rail": undefined,
   "curved-rail": undefined,
