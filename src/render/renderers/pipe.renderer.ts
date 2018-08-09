@@ -1,6 +1,5 @@
 import { createCanvas } from "canvas";
 import { BlueprintEntity, EntitySprite, RenderPassType } from "../../models";
-import { SubPicturesTypes } from "../../models/entity/entity-pictures";
 import { EntityGridView } from "../Blueprint";
 import { getEntity } from "../ItemData";
 import GenericRenderer from "./generic.renderer";
@@ -14,9 +13,9 @@ export default class PipeRenderer extends GenericRenderer {
       throw new Error(`Entity '${entity.name}' doesn't exist!`);
     }
 
-    const pictures = (ent.entity.pictures as SubPicturesTypes);
+    const pictures = ent.entity.pictures;
 
-    if (!pictures.straight_horizontal) {
+    if (!pictures || !("straight_horizontal" in pictures)) {
       throw new Error(`Unable to render ${entity.name}`);
     }
 
