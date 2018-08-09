@@ -1,11 +1,11 @@
-import { Image } from "canvas";
-import { EntityGridView, Pass } from "../render/Blueprint";
-import { BlueprintEntity } from "./index";
+import { EntityGridView } from "../render/Blueprint";
+import { EntitySprite } from "./entity";
+import { BlueprintEntity, RenderPassType } from "./index";
 
 export interface Renderer {
 
-  renderPass(entity: BlueprintEntity, grid: EntityGridView, pass: Pass): Image;
+  renderPass(entity: BlueprintEntity, pass: RenderPassType, highRes: boolean, animationFrame: number, grid: EntityGridView): Promise<EntitySprite>;
 
-  getKey(entity: BlueprintEntity, grid: EntityGridView): string;
+  getKey(entity: BlueprintEntity, pass: RenderPassType, highRes: boolean, animationFrame: number, grid: EntityGridView): string;
 
 }

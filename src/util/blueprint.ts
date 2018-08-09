@@ -4,14 +4,17 @@ import { IBlueprintData } from "../blueprint/Blueprint";
 
 const utf8Decoder = new TextDecoder("utf-8");
 
-const bearings: { [key: number]: any; } = {
+export type Bearing = "north" | "east" | "south" | "west";
+export type Direction = "up" | "right" | "down" | "left";
+
+const bearings: { [key: number]: Bearing; } = {
   0: "north",
   2: "east",
   4: "south",
   6: "west",
 };
 
-const directions: { [key: number]: any; } = {
+const directions: { [key: number]: Direction; } = {
   0: "up",
   2: "right",
   4: "down",
@@ -25,10 +28,10 @@ export function decodeBlueprint(blueprintString: string) {
   return JSON.parse(utf8Decoder.decode(pako.inflate(compressed))).blueprint as IBlueprintData;
 }
 
-export function getBearing(direction: number): "north" | "east" | "south" | "west" {
+export function getBearing(direction: number): Bearing {
   return bearings[direction];
 }
 
-export function getDirection(direction: number): "up" | "right" | "down" | "left" {
+export function getDirection(direction: number): Direction {
   return directions[direction];
 }

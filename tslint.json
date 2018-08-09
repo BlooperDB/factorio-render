@@ -28,7 +28,7 @@
     "no-var-requires": true,
     "prefer-const": true,
     "trailing-comma": true,
-    "align": [true, "parameters", "arguments", "statements", "members", "elements"],
+    "align": [true, "parameters", "statements", "members", "elements"],
     "arrow-return-shorthand": true,
     "no-consecutive-blank-lines": true,
     "no-irregular-whitespace": true,

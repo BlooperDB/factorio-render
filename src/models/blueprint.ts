@@ -1,4 +1,4 @@
-import { Vector } from "./vector";
+import { Vector } from "./positioning";
 
 export interface BlueprintIconSignal {
   type: string;
@@ -15,6 +15,7 @@ export interface BlueprintEntity {
   name: string;
   position: Vector;
   direction?: number;
+  type?: string;
 }
 
 export interface BlueprintData {
