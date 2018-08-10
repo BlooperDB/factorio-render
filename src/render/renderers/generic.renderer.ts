@@ -266,6 +266,10 @@ export default class GenericRenderer implements Renderer {
     canvas = createCanvas(canvasWidth, canvasHeight);
     const ctx = canvas.getContext("2d");
 
+    if (!ctx) {
+      throw new Error("Unable to create canvas");
+    }
+
     if (spriteData.draw_as_shadow) {
       ctx.globalAlpha = 0.5;
     }

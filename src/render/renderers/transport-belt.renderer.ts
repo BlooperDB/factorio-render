@@ -24,6 +24,11 @@ export default class TransportBeltRenderer extends GenericRenderer {
       if (entity.direction && entity.direction >= 4) {
         const newCanvas = createCanvas(canvas.width, canvas.height);
         const newCtx = newCanvas.getContext("2d");
+
+        if (!newCtx) {
+          throw new Error("Unable to create canvas");
+        }
+
         newCtx.translate(canvas.width / 2, canvas.height / 2);
         newCtx.rotate(((entity.direction * 45) - (entity.direction === 6 ? 90 : 0)) * Math.PI / 180);
         newCtx.drawImage(canvas, (canvas.width / 2) * -1, (canvas.height / 2) * -1);
