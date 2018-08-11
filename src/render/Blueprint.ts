@@ -83,6 +83,10 @@ export class Blueprint {
      */
     const ctx = canvas.getContext("2d");
 
+    if (!ctx) {
+      throw new Error("Unable to create canvas rendering context");
+    }
+
     // Color in background
     ctx.fillStyle = "#282828";
     ctx.fillRect(0, 0, canvas.width, canvas.height);
@@ -283,7 +287,7 @@ export class Blueprint {
     }
 
     const out = fs.createWriteStream(file);
-    const stream = canvas.pngStream();
+    const stream = canvas.createPNGStream();
     stream.pipe(out);
 
     console.timeEnd("Render Pass");
