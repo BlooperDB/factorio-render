@@ -36,8 +36,8 @@ export function getEntity(entity: string): Entity | undefined {
     Object.keys(getCategoryMapping()).forEach((ent) => {
       entities[ent] = new Entity(
         getData()[getCategoryMapping()[ent]][ent],
-        getData().recipe[ent],
-        getData().item[ent]
+        getData().item[ent],
+        getData().recipe[ent]
       );
     });
   }

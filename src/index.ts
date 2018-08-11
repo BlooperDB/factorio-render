@@ -7,10 +7,10 @@ console.log(JSON.stringify(item));
 const blueprint = new Blueprint("sample_blueprint.txt");
 console.log(JSON.stringify(blueprint));
 
-blueprint.render("sample.png").then(() => {
-  blueprint.render("sample.png").then(() => {
+blueprint.render("sample.png", 0, false).then(() => {
+  /*blueprint.render("sample.png").then(() => {
     blueprint.render("sample.png").then(() => undefined);
-  });
+  });*/
 });
 
 /*

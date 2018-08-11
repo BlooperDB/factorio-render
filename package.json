@@ -9,6 +9,7 @@
   ],
   "scripts": {
     "dev": "ts-node src/index.ts",
+    "dev:watch": "ts-node-dev --respawn --no-notify src/index.ts",
     "webpack": "webpack --mode production",
     "build": "tsc",
     "lint": "tslint",

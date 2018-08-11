@@ -3,7 +3,7 @@ import { EntityGridView } from "../Blueprint";
 import { getEntity } from "../ItemData";
 import GenericRenderer from "./generic.renderer";
 
-export default class PipeRenderer extends GenericRenderer {
+export default class HeatPipeRenderer extends GenericRenderer {
 
   public async renderPass(entity: BlueprintEntity, pass: RenderPassType, highRes: boolean = false, animationFrame: number = 0, grid: EntityGridView): Promise<EntitySprite> {
     const ent = getEntity(entity.name);
@@ -12,7 +12,7 @@ export default class PipeRenderer extends GenericRenderer {
       throw new Error(`Entity '${entity.name}' doesn't exist!`);
     }
 
-    const pictures = ent.entity.pictures;
+    const pictures = ent.entity.connection_sprites;
 
     if (!pictures || !("straight_horizontal" in pictures)) {
       throw new Error(`Unable to render ${entity.name}`);
@@ -21,58 +21,58 @@ export default class PipeRenderer extends GenericRenderer {
     const around = this.getAround(entity.position, grid);
     const count = around.reduce((a: number, b: number) => a + b, 0);
 
-    let source = pictures.straight_horizontal;
+    let source = (pictures.single as Array<SpriteData>)[0];
     switch (count) {
       default:
       case 0:
         break;
       case 1:
         if (around[0]) {
-          source = pictures.ending_up;
+          source = (pictures.ending_up as Array<SpriteData>)[0];
         } else if (around[1]) {
-          source = pictures.ending_right;
+          source = (pictures.ending_right as Array<SpriteData>)[0];
         } else if (around[2]) {
-          source = pictures.ending_down;
+          source = (pictures.ending_down as Array<SpriteData>)[0];
         } else {
-          source = pictures.ending_left;
+          source = (pictures.ending_left as Array<SpriteData>)[0];
         }
         break;
       case 2:
         if (around[0]) {
           if (around[1]) {
-            source = pictures.corner_up_right;
+            source = (pictures.corner_right_up as Array<SpriteData>)[0];
           } else if (around[2]) {
-            source = pictures.straight_vertical;
+            source = (pictures.straight_vertical as Array<SpriteData>)[0];
           } else if (around[3]) {
-            source = pictures.corner_up_left;
+            source = (pictures.corner_left_up as Array<SpriteData>)[0];
           }
         } else if (around[1]) {
           if (around[2]) {
-            source = pictures.corner_down_right;
+            source = (pictures.corner_right_down as Array<SpriteData>)[0];
           } else if (around[3]) {
-            source = pictures.straight_horizontal;
+            source = (pictures.straight_horizontal as Array<SpriteData>)[0];
           }
         } else {
-          source = pictures.corner_down_left;
+          source = (pictures.corner_left_down as Array<SpriteData>)[0];
         }
         break;
       case 3:
         if (!around[0]) {
-          source = pictures.t_down;
+          source = (pictures.t_down as Array<SpriteData>)[0];
         } else if (!around[1]) {
-          source = pictures.t_left;
+          source = (pictures.t_left as Array<SpriteData>)[0];
         } else if (!around[2]) {
-          source = pictures.t_up;
+          source = (pictures.t_up as Array<SpriteData>)[0];
         } else if (!around[3]) {
-          source = pictures.t_right;
+          source = (pictures.t_right as Array<SpriteData>)[0];
         }
         break;
       case 4:
-        source = pictures.cross;
+        source = (pictures.cross as Array<SpriteData>)[0];
         break;
     }
 
-    return this.loadSprite(source as SpriteData, entity, pass, "", highRes, animationFrame, grid);
+    return this.loadSprite(source, entity, pass, "", highRes, animationFrame, grid);
   }
 
   public getKey(entity: BlueprintEntity, pass: RenderPassType, highRes: boolean, animationFrame: number, grid: EntityGridView): string {
@@ -81,10 +81,10 @@ export default class PipeRenderer extends GenericRenderer {
 
   public getAround(pos: Vector, grid: EntityGridView): any {
     return [
-      pos.x in grid.fluids && pos.y - 0.5 in grid.fluids[pos.x] && grid.fluids[pos.x][pos.y - 0.5] > 1,
-      pos.x + 0.5 in grid.fluids && pos.y in grid.fluids[pos.x + 0.5] && grid.fluids[pos.x + 0.5][pos.y] > 1,
-      pos.x in grid.fluids && pos.y + 0.5 in grid.fluids[pos.x] && grid.fluids[pos.x][pos.y + 0.5] > 1,
-      pos.x - 0.5 in grid.fluids && pos.y in grid.fluids[pos.x - 0.5] && grid.fluids[pos.x - 0.5][pos.y] > 1
+      pos.x in grid.heat && pos.y - 0.5 in grid.heat[pos.x] && grid.heat[pos.x][pos.y - 0.5] > 1,
+      pos.x + 0.5 in grid.heat && pos.y in grid.heat[pos.x + 0.5] && grid.heat[pos.x + 0.5][pos.y] > 1,
+      pos.x in grid.heat && pos.y + 0.5 in grid.heat[pos.x] && grid.heat[pos.x][pos.y + 0.5] > 1,
+      pos.x - 0.5 in grid.heat && pos.y in grid.heat[pos.x - 0.5] && grid.heat[pos.x - 0.5][pos.y] > 1
     ];
   }
 

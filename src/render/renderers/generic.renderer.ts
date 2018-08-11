@@ -209,7 +209,7 @@ export default class GenericRenderer implements Renderer {
       }
     }
 
-    if ((spriteData.frame_count && spriteData.frame_count > 1) || (spriteData.direction_count && animatedDirections.indexOf(entity.name!) >= 0)) {
+    if ((spriteData.frame_count && spriteData.frame_count > 1) || (spriteData.direction_count && animatedDirections.indexOf(entity.name!) >= 0) && row === undefined && column === undefined) {
       column = animationFrame % (spriteData.frame_count || spriteData.direction_count)!;
       if (spriteData.line_length) {
         row = Math.floor(column / spriteData.line_length);
@@ -234,7 +234,7 @@ export default class GenericRenderer implements Renderer {
     const y = (row || 0) * spriteData.height;
 
     let canvas = imageToCanvas(image);
-    image = cropCanvas(canvas, spriteData.x || x, spriteData.y || y, spriteData.width, spriteData.height);
+    image = cropCanvas(canvas, column ? (x) : spriteData.x || x, row ? (y) : spriteData.y || y, spriteData.width, spriteData.height);
 
     const width = spriteData.width;
     const height = spriteData.height;

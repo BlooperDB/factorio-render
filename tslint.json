@@ -23,7 +23,7 @@
     "prefer-switch": true,
     "typeof-compare": true,
     "use-isnan": true,
-    "linebreak-style": [true, "LF"],
+    "linebreak-style": false,
     "no-require-imports": true,
     "no-var-requires": true,
     "prefer-const": true,

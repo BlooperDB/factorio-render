@@ -2,8 +2,9 @@ import { BlueprintEntity, EntitySprite, RenderPassType, SpriteData, Vector } fro
 import { EntityGridView } from "../Blueprint";
 import { getEntity } from "../ItemData";
 import GenericRenderer from "./generic.renderer";
+import { PictureTypes } from "../../models/entity/entity-pictures";
 
-export default class PipeRenderer extends GenericRenderer {
+export default class WallRenderer extends GenericRenderer {
 
   public async renderPass(entity: BlueprintEntity, pass: RenderPassType, highRes: boolean = false, animationFrame: number = 0, grid: EntityGridView): Promise<EntitySprite> {
     const ent = getEntity(entity.name);
@@ -21,18 +22,16 @@ export default class PipeRenderer extends GenericRenderer {
     const around = this.getAround(entity.position, grid);
     const count = around.reduce((a: number, b: number) => a + b, 0);
 
-    let source = pictures.straight_horizontal;
+    let source = (pictures.single as any);
     switch (count) {
       default:
       case 0:
         break;
       case 1:
-        if (around[0]) {
-          source = pictures.ending_up;
-        } else if (around[1]) {
+        if (around[1]) {
           source = pictures.ending_right;
         } else if (around[2]) {
-          source = pictures.ending_down;
+          source = (pictures.straight_vertical as any)[0];
         } else {
           source = pictures.ending_left;
         }
@@ -40,36 +39,48 @@ export default class PipeRenderer extends GenericRenderer {
       case 2:
         if (around[0]) {
           if (around[1]) {
-            source = pictures.corner_up_right;
+            source = pictures.ending_right;
           } else if (around[2]) {
-            source = pictures.straight_vertical;
+            source = (pictures.straight_vertical as any)[0];
           } else if (around[3]) {
-            source = pictures.corner_up_left;
+            source = pictures.ending_left;
           }
         } else if (around[1]) {
           if (around[2]) {
-            source = pictures.corner_down_right;
+            source = pictures.corner_right_down;
           } else if (around[3]) {
-            source = pictures.straight_horizontal;
+            source = (pictures.straight_horizontal as any)[0];
           }
         } else {
-          source = pictures.corner_down_left;
+          source = pictures.corner_left_down;
         }
         break;
       case 3:
         if (!around[0]) {
-          source = pictures.t_down;
-        } else if (!around[1]) {
-          source = pictures.t_left;
-        } else if (!around[2]) {
           source = pictures.t_up;
+        } else if (!around[1]) {
+          source = pictures.corner_left_down;
+        } else if (!around[2]) {
+          source = (pictures.straight_horizontal as any)[0];
         } else if (!around[3]) {
-          source = pictures.t_right;
+          source = pictures.corner_right_down;
         }
         break;
       case 4:
-        source = pictures.cross;
+        source = pictures.t_up;
         break;
+    }
+
+    if ("layers" in source) {
+      source = source.layers;
+    }
+
+    if (Array.isArray(source)) {
+      if (pass === "SHADOW") {
+        source = source[1];
+      } else {
+        source = source[0];
+      }
     }
 
     return this.loadSprite(source as SpriteData, entity, pass, "", highRes, animationFrame, grid);
@@ -81,10 +92,10 @@ export default class PipeRenderer extends GenericRenderer {
 
   public getAround(pos: Vector, grid: EntityGridView): any {
     return [
-      pos.x in grid.fluids && pos.y - 0.5 in grid.fluids[pos.x] && grid.fluids[pos.x][pos.y - 0.5] > 1,
-      pos.x + 0.5 in grid.fluids && pos.y in grid.fluids[pos.x + 0.5] && grid.fluids[pos.x + 0.5][pos.y] > 1,
-      pos.x in grid.fluids && pos.y + 0.5 in grid.fluids[pos.x] && grid.fluids[pos.x][pos.y + 0.5] > 1,
-      pos.x - 0.5 in grid.fluids && pos.y in grid.fluids[pos.x - 0.5] && grid.fluids[pos.x - 0.5][pos.y] > 1
+      pos.x in grid.walls && pos.y - 0.5 in grid.walls[pos.x] && grid.walls[pos.x][pos.y - 0.5] > 1,
+      pos.x + 0.5 in grid.walls && pos.y in grid.walls[pos.x + 0.5] && grid.walls[pos.x + 0.5][pos.y] > 1,
+      pos.x in grid.walls && pos.y + 0.5 in grid.walls[pos.x] && grid.walls[pos.x][pos.y + 0.5] > 1,
+      pos.x - 0.5 in grid.walls && pos.y in grid.walls[pos.x - 0.5] && grid.walls[pos.x - 0.5][pos.y] > 1
     ];
   }
 
