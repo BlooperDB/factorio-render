@@ -16,6 +16,7 @@ export interface BlueprintEntity {
   position: Vector;
   direction?: number;
   type?: string;
+  recipe?: string;
 }
 
 export interface BlueprintData {

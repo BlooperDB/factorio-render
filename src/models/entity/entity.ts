@@ -3,9 +3,12 @@ import { Vector } from "..";
 import { EntityGridView } from "../../render/Blueprint";
 import AssemblingMachineRenderer from "../../render/renderers/assembling-machine.renderer";
 import GenericRenderer from "../../render/renderers/generic.renderer";
+import HeatPipeRenderer from "../../render/renderers/heat-pipe.renderer";
+import PipeToGroundRenderer from "../../render/renderers/pipe-to-ground.renderer";
 import PipeRenderer from "../../render/renderers/pipe.renderer";
 import TransportBeltRenderer from "../../render/renderers/transport-belt.renderer";
 import UndergroundBeltRenderer from "../../render/renderers/underground-belt.renderer";
+import WallRenderer from "../../render/renderers/wall.renderer";
 import { BlueprintEntity } from "../blueprint";
 import { RenderPassType } from "../pass";
 import { Renderer } from "../renderer";
@@ -17,14 +20,15 @@ export interface RecipeData {
   name: string;
   normal: {
     enabled: boolean;
-    ingredients: Array<Array<string | number>>
+    ingredients: Array<any>
     result: string;
   };
   expensive?: {
     enabled: boolean;
-    ingredients: Array<Array<string | number>>
+    ingredients: Array<any>
     result: string;
   };
+  ingredients?: Array<any>;
 }
 
 export interface ItemData {
@@ -55,6 +59,7 @@ export interface EntityData {
   pictures?: PicturesTypes;
   layer?: any;
   overlay?: PictureTypes;
+  connection_sprites?: PicturesTypes;
 
   // Generic
   fluid_box: any;
@@ -62,6 +67,8 @@ export interface EntityData {
   output_fluid_box: any;
   structure: any;
   type: string;
+  heat_buffer: any;
+  energy_source: any;
 
   // Transport Belts
   ending_patch: any;
@@ -86,7 +93,7 @@ export interface EntitySprite {
 
 const renderers: { [key: string]: Renderer | undefined; } = {
   "pipe": new PipeRenderer(),
-  "stone-wall": undefined,
+  "stone-wall": new WallRenderer(),
   "straight-rail": undefined,
   "curved-rail": undefined,
   "arithmetic-combinator": undefined,
@@ -101,7 +108,7 @@ const renderers: { [key: string]: Renderer | undefined; } = {
   "fast-transport-belt": new TransportBeltRenderer(),
   "express-transport-belt": new TransportBeltRenderer(),
   "train-stop": undefined,
-  "heat-pipe": undefined,
+  "heat-pipe": new HeatPipeRenderer(),
   "flamethrower-turret": undefined,
   "heat-exchanger": undefined,
   "gate": undefined,
@@ -120,7 +127,7 @@ const renderers: { [key: string]: Renderer | undefined; } = {
   "underground-belt": new UndergroundBeltRenderer(),
   "fast-underground-belt": new UndergroundBeltRenderer(),
   "express-underground-belt": new UndergroundBeltRenderer(),
-  "pipe-to-ground": undefined,
+  "pipe-to-ground": new PipeToGroundRenderer(),
   "assembling-machine": new AssemblingMachineRenderer(),
   "assembling-machine-2": new AssemblingMachineRenderer(),
   "assembling-machine-3": new AssemblingMachineRenderer(),
@@ -132,6 +139,7 @@ const renderers: { [key: string]: Renderer | undefined; } = {
   "small-lamp": undefined,
   "roboport": undefined,
   "steam-turbine": undefined,
+  "nuclear-reactor": undefined,
 };
 
 const genericRenderer = new GenericRenderer();

@@ -9,6 +9,7 @@
   ],
   "scripts": {
     "dev": "ts-node src/index.ts",
+    "dev:watch": "ts-node-dev --respawn --no-notify src/index.ts",
     "build": "tsc",
     "lint": "tslint --project tsconfig.json",
     "doc": "typedoc --name factorio-render --readme README.md --out docs/ src/"

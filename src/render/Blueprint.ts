@@ -71,7 +71,7 @@ export class Blueprint {
     });
   }
 
-  public async render(file: string, frame: number = 0) {
+  public async render(file: string, frame: number = 0, debug: boolean = false) {
     console.time("Render Pass");
     const scaling = 32;
     const size = this.getSize();
@@ -135,7 +135,10 @@ export class Blueprint {
       if (!sprite || !sprite.image) {
         const startX = (relativeX * scaling + (scaling / 2)) - 10;
         const startY = (relativeY * scaling + (scaling / 2)) - 10;
+        ctx.fillStyle = "#3c3c3c";
         ctx.fillRect(startX, startY, 20, 20);
+        ctx.fillStyle = "#282828";
+        ctx.fillText("?", startX + 10, startY + 18);
       } else {
         const startX = Math.floor((relativeX * scaling + (scaling / 2)) - (sprite.image.width / 2));
         const startY = Math.floor((relativeY * scaling + (scaling / 2)) - (sprite.image.height / 2));
@@ -173,7 +176,10 @@ export class Blueprint {
       if (!sprite || !sprite.image) {
         const startX = (relativeX * scaling + (scaling / 2)) - 10;
         const startY = (relativeY * scaling + (scaling / 2)) - 10;
+        ctx.fillStyle = "#3c3c3c";
         ctx.fillRect(startX, startY, 20, 20);
+        ctx.fillStyle = "#282828";
+        ctx.fillText("?", startX + 10, startY + 18);
       } else {
         const startX = Math.floor((relativeX * scaling + (scaling / 2)) - (sprite.image.width / 2));
         const startY = Math.floor((relativeY * scaling + (scaling / 2)) - (sprite.image.height / 2));
@@ -181,7 +187,8 @@ export class Blueprint {
       }
     }
 
-    ctx.strokeStyle = "#009fc7";
+    ctx.strokeStyle = "#36732c";
+    ctx.fillStyle = "#676767";
 
     // Fourth pass: overlay
     for (let i = 0; i < this.normalEntities.length; i++) {
@@ -199,32 +206,85 @@ export class Blueprint {
         ctx.drawImage(sprite.image, startX, startY, sprite.image.width, sprite.image.height);
       }
 
-      const entSize = getEntity(entity.name)!.getTileSize(entity);
-      const bbX = Math.floor((relativeX * scaling + (scaling / 2)) - (entSize.x / 2) * scaling);
-      const bbY = Math.floor((relativeY * scaling + (scaling / 2)) - (entSize.y / 2) * scaling);
-      ctx.rect(bbX, bbY, entSize.x * scaling, entSize.y * scaling);
-      ctx.stroke();
+      if (debug) {
+        const entSize = getEntity(entity.name)!.getTileSize(entity);
+        const bbX = Math.floor((relativeX * scaling + (scaling / 2)) - (entSize.x / 2) * scaling);
+        const bbY = Math.floor((relativeY * scaling + (scaling / 2)) - (entSize.y / 2) * scaling);
+        ctx.fillText((entity.direction || 0).toString(), bbX + 16, bbY + 24);
+        ctx.rect(bbX, bbY, entSize.x * scaling, entSize.y * scaling);
+        ctx.stroke();
+      }
     }
 
-    Object.keys(grid.fluids).forEach((x: any) => {
-      Object.keys(grid.fluids[x]).forEach((y: any) => {
-        const relativeX = parseFloat(x) + Math.abs(size.minX) + 0.5;
-        const relativeY = parseFloat(y) + Math.abs(size.minY) + 0.5;
+    if (debug) {
+      Object.keys(grid.fluids).forEach((x: any) => {
+        Object.keys(grid.fluids[x]).forEach((y: any) => {
+          const relativeX = parseFloat(x) + Math.abs(size.minX) + 0.5;
+          const relativeY = parseFloat(y) + Math.abs(size.minY) + 0.5;
 
-        const centerX = (relativeX * scaling + (scaling / 2));
-        const centerY = (relativeY * scaling + (scaling / 2));
+          const centerX = (relativeX * scaling + (scaling / 2));
+          const centerY = (relativeY * scaling + (scaling / 2));
 
-        if (grid.fluids[x][y] > 1) {
-          ctx.fillStyle = "#59ff12";
-        } else {
-          ctx.fillStyle = "#ff0100";
-        }
+          if (grid.fluids[x][y] > 1) {
+            ctx.fillStyle = "#4b63cb";
+          } else {
+            ctx.fillStyle = "#896f97";
+          }
 
-        if (grid.fluids[x][y] > 0) {
           ctx.fillRect(centerX - 5, centerY - 5, 10, 10);
-        }
+        });
       });
-    });
+
+      Object.keys(grid.heat).forEach((x: any) => {
+        Object.keys(grid.heat[x]).forEach((y: any) => {
+          const relativeX = parseFloat(x) + Math.abs(size.minX) + 0.5;
+          const relativeY = parseFloat(y) + Math.abs(size.minY) + 0.5;
+
+          const centerX = (relativeX * scaling + (scaling / 2));
+          const centerY = (relativeY * scaling + (scaling / 2));
+
+          if (grid.heat[x][y] > 1) {
+            ctx.fillStyle = "#cb383f";
+          } else {
+            ctx.fillStyle = "#97765a";
+          }
+
+          ctx.fillRect(centerX - 5, centerY - 5, 10, 10);
+        });
+      });
+
+      Object.keys(grid.walls).forEach((x: any) => {
+        Object.keys(grid.walls[x]).forEach((y: any) => {
+          const relativeX = parseFloat(x) + Math.abs(size.minX) + 0.5;
+          const relativeY = parseFloat(y) + Math.abs(size.minY) + 0.5;
+
+          const centerX = (relativeX * scaling + (scaling / 2));
+          const centerY = (relativeY * scaling + (scaling / 2));
+
+          if (grid.walls[x][y] > 1) {
+            ctx.fillStyle = "#6b8346";
+          } else {
+            ctx.fillStyle = "#505949";
+          }
+
+          ctx.fillRect(centerX - 5, centerY - 5, 10, 10);
+        });
+      });
+
+      ctx.fillStyle = "#2e8372";
+
+      Object.keys(grid.belts).forEach((x: any) => {
+        Object.keys(grid.belts[x]).forEach((y: any) => {
+          const relativeX = parseFloat(x) + Math.abs(size.minX) + 0.5;
+          const relativeY = parseFloat(y) + Math.abs(size.minY) + 0.5;
+
+          const centerX = (relativeX * scaling + (scaling / 2));
+          const centerY = (relativeY * scaling + (scaling / 2));
+
+          ctx.fillRect(centerX - 5, centerY - 5, 10, 10);
+        });
+      });
+    }
 
     const out = fs.createWriteStream(file);
     const stream = canvas.createPNGStream();
@@ -284,6 +344,9 @@ export class Blueprint {
   private entitiesToGrid(): EntityGridView {
     const grid: { [key: number]: { [key: number]: BlueprintEntity; }; } = {};
     const fluids: { [key: number]: { [key: number]: number; }; } = {};
+    const heat: { [key: number]: { [key: number]: number; }; } = {};
+    const walls: { [key: number]: { [key: number]: number; }; } = {};
+    const belts: { [key: number]: { [key: number]: number; }; } = {};
 
     this.blueprint.entities.forEach((entity) => {
       if (grid[entity.position.x] === undefined) {
@@ -291,8 +354,8 @@ export class Blueprint {
       }
 
       const e = getEntity(entity.name);
-      if (e!.entity.fluid_box || e!.entity.fluid_boxes) {
-        const connections: Array<any> = e!.entity.fluid_box ? e!.entity.fluid_box.pipe_connections : [];
+      if (e!.entity.fluid_box || e!.entity.fluid_boxes || e!.entity.output_fluid_box) {
+        const connections: Array<any> = e!.entity.fluid_box ? [...e!.entity.fluid_box.pipe_connections] : [];
 
         if (e!.entity.fluid_boxes) {
           Object.keys(e!.entity.fluid_boxes).forEach((key: any) => {
@@ -302,18 +365,31 @@ export class Blueprint {
           });
         }
 
-        if (e!.entity.output_fluid_box) {
+        if ("output_fluid_box" in e!.entity) {
           connections.push(...e!.entity.output_fluid_box.pipe_connections);
         }
 
         let addToConnected = e!.entity.type !== "assembling-machine";
-        if (e!.entity.type === "assembling-machine") {
-          // TODO Check if recipe contains fluid
-          addToConnected = true;
+        if (e!.entity.type === "assembling-machine" && entity.recipe) {
+          const entRecipe = getEntity(entity.recipe);
+          if (entRecipe) {
+            const recipe = entRecipe!.recipe;
+            const ingredients = recipe.ingredients || recipe.normal.ingredients;
+            for (let i = 0; i < ingredients.length; i++) {
+              if (ingredients[i].type === "fluid") {
+                addToConnected = true;
+                break;
+              }
+            }
+          }
         }
 
         if (addToConnected) {
           connections.forEach((conn: any) => {
+            if ("max_underground_distance" in conn) {
+              return;
+            }
+
             let vec = {
               x: conn.position[0],
               y: conn.position[1]
@@ -353,10 +429,137 @@ export class Blueprint {
         }
       }
 
+      if (e!.entity.heat_buffer || (e!.entity.energy_source && e!.entity.energy_source.connections)) {
+        const connections: Array<any> = e!.entity.heat_buffer ? [...e!.entity.heat_buffer.connections] : [];
+
+        if (e!.entity.energy_source) {
+          connections.push(...e!.entity.energy_source.connections);
+        }
+
+        connections.forEach((conn) => {
+          let vec = {
+            x: conn.position[0],
+            y: conn.position[1]
+          };
+
+          switch (conn.direction) {
+            default:
+            case 0:
+              vec.y -= 0.5;
+              break;
+            case 2:
+              vec.x += 0.5;
+              break;
+            case 4:
+              vec.y += 0.5;
+              break;
+            case 6:
+              vec.x -= 0.5;
+              break;
+          }
+
+          vec = this.rotateVector(vec, entity.direction || 0);
+
+          vec.x += entity.position.x;
+          vec.y += entity.position.y;
+
+          if (heat[vec.x] === undefined) {
+            heat[vec.x] = {};
+          }
+
+          if (heat[vec.x][vec.y] === undefined) {
+            heat[vec.x][vec.y] = 0;
+          }
+
+          heat[vec.x][vec.y] += 1;
+        });
+      }
+
+      if (e!.entity.type === "wall" || e!.entity.type === "gate") {
+        const connections: Array<Vector> = [
+          {x: -0.5, y: 0},
+          {x: 0.5, y: 0},
+          {x: 0, y: -0.5},
+          {x: 0, y: 0.5},
+        ];
+
+        connections.forEach((conn) => {
+          conn.x += entity.position.x;
+          conn.y += entity.position.y;
+
+          if (walls[conn.x] === undefined) {
+            walls[conn.x] = {};
+          }
+
+          if (walls[conn.x][conn.y] === undefined) {
+            walls[conn.x][conn.y] = 0;
+          }
+
+          walls[conn.x][conn.y] += 1;
+        });
+      }
+
+      if (e!.entity.type === "transport-belt" || (e!.entity.type === "underground-belt" && entity.type !== "input") || e!.entity.type === "splitter") {
+        const connections: Array<Vector> = [];
+        if (e!.entity.type === "transport-belt" || e!.entity.type === "underground-belt") {
+          const forward = {x: entity.position.x, y: entity.position.y};
+
+          switch (entity.direction || 0) {
+            default:
+            case 0:
+              forward.y -= 0.5;
+              break;
+            case 2:
+              forward.x += 0.5;
+              break;
+            case 4:
+              forward.y += 0.5;
+              break;
+            case 6:
+              forward.x -= 0.5;
+              break;
+          }
+
+          connections.push(forward);
+        } else if (e!.entity.type === "splitter") {
+          switch (entity.direction || 0) {
+            default:
+            case 0:
+              connections.push({x: entity.position.x - 0.5, y: entity.position.y - 0.5});
+              connections.push({x: entity.position.x + 0.5, y: entity.position.y - 0.5});
+              break;
+            case 2:
+              connections.push({x: entity.position.x + 0.5, y: entity.position.y - 0.5});
+              connections.push({x: entity.position.x + 0.5, y: entity.position.y + 0.5});
+              break;
+            case 4:
+              connections.push({x: entity.position.x - 0.5, y: entity.position.y + 0.5});
+              connections.push({x: entity.position.x + 0.5, y: entity.position.y + 0.5});
+              break;
+            case 6:
+              connections.push({x: entity.position.x - 0.5, y: entity.position.y - 0.5});
+              connections.push({x: entity.position.x - 0.5, y: entity.position.y + 0.5});
+              break;
+          }
+        }
+
+        connections.forEach((conn) => {
+          if (belts[conn.x] === undefined) {
+            belts[conn.x] = {};
+          }
+
+          if (belts[conn.x][conn.y] === undefined) {
+            belts[conn.x][conn.y] = 0;
+          }
+
+          belts[conn.x][conn.y] += 1;
+        });
+      }
+
       grid[entity.position.x][entity.position.y] = entity;
     });
 
-    return new EntityGridView(grid, fluids);
+    return new EntityGridView(grid, fluids, heat, walls, belts);
   }
 
   private isWithinBB(bb: BoundingBox, point: Vector): boolean {
@@ -398,12 +601,22 @@ export class EntityGridView {
 
   public readonly grid: { [key: number]: { [key: number]: BlueprintEntity; }; };
   public readonly fluids: { [key: number]: { [key: number]: number; }; };
+  public readonly heat: { [key: number]: { [key: number]: number; }; };
+  public readonly walls: { [key: number]: { [key: number]: number; }; };
+  public readonly belts: { [key: number]: { [key: number]: number; }; };
   private centerX: number = 0;
   private centerY: number = 0;
 
-  constructor(grid: { [key: number]: { [key: number]: BlueprintEntity; }; }, fluids: { [key: number]: { [key: number]: number; }; }) {
+  constructor(grid: { [key: number]: { [key: number]: BlueprintEntity; }; },
+              fluids: { [key: number]: { [key: number]: number; }; },
+              heat: { [key: number]: { [key: number]: number; }; },
+              walls: { [key: number]: { [key: number]: number; }; },
+              belts: { [key: number]: { [key: number]: number; }; }) {
     this.grid = grid;
     this.fluids = fluids;
+    this.heat = heat;
+    this.walls = walls;
+    this.belts = belts;
   }
 
   public getRelative(relativeX: number, relativeY: number) {
