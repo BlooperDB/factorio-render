@@ -1,6 +1,7 @@
 import { Image } from "canvas";
 import { Vector } from "..";
 import { EntityGridView } from "../../render/Blueprint";
+import AssemblingMachineRenderer from "../../render/renderers/assembling-machine.renderer";
 import GenericRenderer from "../../render/renderers/generic.renderer";
 import PipeRenderer from "../../render/renderers/pipe.renderer";
 import TransportBeltRenderer from "../../render/renderers/transport-belt.renderer";
@@ -120,9 +121,9 @@ const renderers: { [key: string]: Renderer | undefined; } = {
   "fast-underground-belt": new UndergroundBeltRenderer(),
   "express-underground-belt": new UndergroundBeltRenderer(),
   "pipe-to-ground": undefined,
-  "assembling-machine": undefined,
-  "assembling-machine-2": undefined,
-  "assembling-machine-3": undefined,
+  "assembling-machine": new AssemblingMachineRenderer(),
+  "assembling-machine-2": new AssemblingMachineRenderer(),
+  "assembling-machine-3": new AssemblingMachineRenderer(),
   "rocket-silo": undefined,
   "gun-turret": undefined,
   "laser-turret": undefined,

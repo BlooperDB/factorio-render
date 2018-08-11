@@ -1,4 +1,4 @@
-import { CanvasRenderingContext2D, createCanvas, loadImage } from "canvas";
+import { createCanvas, loadImage } from "canvas";
 import { BlueprintEntity, Renderer, RenderPassType } from "../../models";
 import { SpriteData } from "../../models";
 import { EntitySprite } from "../../models";
