@@ -2,7 +2,6 @@ import { BlueprintEntity, EntitySprite, RenderPassType, SpriteData, Vector } fro
 import { EntityGridView } from "../Blueprint";
 import { getEntity } from "../ItemData";
 import GenericRenderer from "./generic.renderer";
-import { PictureTypes } from "../../models/entity/entity-pictures";
 
 export default class WallRenderer extends GenericRenderer {
 

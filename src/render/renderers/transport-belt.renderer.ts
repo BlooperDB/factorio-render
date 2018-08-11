@@ -1,8 +1,8 @@
+import { createCanvas } from "canvas";
 import { BlueprintEntity, EntitySprite, RenderPassType, Vector } from "../../models";
 import { EntityGridView } from "../Blueprint";
 import { getEntity } from "../ItemData";
 import GenericRenderer from "./generic.renderer";
-import { createCanvas } from "canvas";
 
 export default class TransportBeltRenderer extends GenericRenderer {
 
@@ -92,6 +92,11 @@ export default class TransportBeltRenderer extends GenericRenderer {
       // TODO Bend based on surroundings
       const newCanvas = createCanvas(canvas.width, canvas.height);
       const newCtx = newCanvas.getContext("2d");
+
+      if (!newCtx) {
+        throw new Error("Unable to create canvas");
+      }
+
       newCtx.translate(canvas.width / 2, canvas.height / 2);
       newCtx.rotate((((entity.direction || 0) * 45) - rotation) * Math.PI / 180);
       newCtx.drawImage(canvas, (canvas.width / 2) * -1, (canvas.height / 2) * -1);
