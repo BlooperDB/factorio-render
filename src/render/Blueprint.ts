@@ -1,14 +1,9 @@
 import { createCanvas } from "canvas";
 import * as fs from "fs";
-import { BlueprintData, BlueprintEntity, Vector } from "../models";
+import { BlueprintData, BlueprintEntity, RenderPassType, Vector } from "../models";
 import { BoundingBox } from "../models";
 import { decodeBlueprint } from "../util/blueprint";
 import { getEntity } from "./ItemData";
-
-export interface Pass {
-  name: string;
-  subPasses?: Array<Pass>;
-}
 
 const railEntityNames = [
   "straight-rail",
@@ -123,26 +118,49 @@ export class Blueprint {
     }
 
     // First pass: Rails
-    for (let i = 0; i < this.railEntities.length; i++) {
-      const entity = this.railEntities[i];
-      const position = entity.position;
 
-      const relativeX = position.x + Math.abs(size.minX) + 0.5;
-      const relativeY = position.y + Math.abs(size.minY) + 0.5;
+    const railPasses: Array<RenderPassType> = [
+      "RAIL_STONE_BACKGROUND",
+      "RAIL_STONE",
+      "RAIL_TIES",
+      "RAIL_BACKPLATES",
+      "RAIL_METALS"
+    ];
 
-      const sprite = await getEntity(entity.name)!.getSprite(entity, "RAIL", false, frame, grid);
+    for (let k = 0; k < railPasses.length; k++) {
+      const pass = railPasses[k];
+      for (let i = 0; i < this.railEntities.length; i++) {
+        const entity = this.railEntities[i];
+        const position = entity.position;
 
-      if (!sprite || !sprite.image) {
-        const startX = (relativeX * scaling + (scaling / 2)) - 10;
-        const startY = (relativeY * scaling + (scaling / 2)) - 10;
-        ctx.fillStyle = "#3c3c3c";
-        ctx.fillRect(startX, startY, 20, 20);
-        ctx.fillStyle = "#282828";
-        ctx.fillText("?", startX + 10, startY + 18);
-      } else {
-        const startX = Math.floor((relativeX * scaling + (scaling / 2)) - (sprite.image.width / 2));
-        const startY = Math.floor((relativeY * scaling + (scaling / 2)) - (sprite.image.height / 2));
-        ctx.drawImage(sprite.image, startX, startY, sprite.image.width, sprite.image.height);
+        const relativeX = position.x + Math.abs(size.minX) + 0.5;
+        const relativeY = position.y + Math.abs(size.minY) + 0.5;
+
+        const sprite = await getEntity(entity.name)!.getSprite(entity, pass, false, frame, grid);
+
+        if (!sprite || !sprite.image) {
+          if (!debug && pass === "RAIL_STONE_BACKGROUND") {
+            const startX = (relativeX * scaling + (scaling / 2)) - 10;
+            const startY = (relativeY * scaling + (scaling / 2)) - 10;
+            ctx.fillStyle = "#3c3c3c";
+            ctx.fillRect(startX, startY, 20, 20);
+            ctx.fillStyle = "#282828";
+            ctx.fillText("?", startX + 10, startY + 18);
+          }
+        } else {
+          const startX = Math.floor((relativeX * scaling + (scaling / 2)) - (sprite.image.width / 2));
+          const startY = Math.floor((relativeY * scaling + (scaling / 2)) - (sprite.image.height / 2));
+          ctx.drawImage(sprite.image, startX, startY, sprite.image.width, sprite.image.height);
+        }
+
+        if (debug && pass === "RAIL_STONE_BACKGROUND") {
+          const entSize = getEntity(entity.name)!.getTileSize(entity);
+          const bbX = Math.floor((relativeX * scaling + (scaling / 2)) - (entSize.x / 2) * scaling);
+          const bbY = Math.floor((relativeY * scaling + (scaling / 2)) - (entSize.y / 2) * scaling);
+          ctx.fillText((entity.direction || 0).toString(), bbX + 16, bbY + 24);
+          ctx.rect(bbX, bbY, entSize.x * scaling, entSize.y * scaling);
+          ctx.stroke();
+        }
       }
     }
 
@@ -174,12 +192,14 @@ export class Blueprint {
       const sprite = await getEntity(entity.name)!.getSprite(entity, "ENTITY", false, frame, grid);
 
       if (!sprite || !sprite.image) {
-        const startX = (relativeX * scaling + (scaling / 2)) - 10;
-        const startY = (relativeY * scaling + (scaling / 2)) - 10;
-        ctx.fillStyle = "#3c3c3c";
-        ctx.fillRect(startX, startY, 20, 20);
-        ctx.fillStyle = "#282828";
-        ctx.fillText("?", startX + 10, startY + 18);
+        if (!debug) {
+          const startX = (relativeX * scaling + (scaling / 2)) - 10;
+          const startY = (relativeY * scaling + (scaling / 2)) - 10;
+          ctx.fillStyle = "#3c3c3c";
+          ctx.fillRect(startX, startY, 20, 20);
+          ctx.fillStyle = "#282828";
+          ctx.fillText("?", startX + 10, startY + 18);
+        }
       } else {
         const startX = Math.floor((relativeX * scaling + (scaling / 2)) - (sprite.image.width / 2));
         const startY = Math.floor((relativeY * scaling + (scaling / 2)) - (sprite.image.height / 2));
@@ -291,6 +311,7 @@ export class Blueprint {
     stream.pipe(out);
 
     console.timeEnd("Render Pass");
+    // TODO Reject
     return new Promise((resolve, reject) => {
       out.on("finish", () => {
         resolve();

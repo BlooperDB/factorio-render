@@ -50,4 +50,34 @@ export type PicturesTypes = PictureTypes |
     corner_left_down: SpriteData | Array<SpriteData>,
     low_temperature_flow: SpriteData,
     single: SpriteData | Array<SpriteData> | PictureTypes,
+  } |
+  {
+    rail_endings: RailTypes;
+    curved_rail_vertical_left_top: RailTypes;
+    curved_rail_vertical_right_top: RailTypes;
+    straight_rail_diagonal_right_bottom: RailTypes;
+    curved_rail_horizontal_left_top: RailTypes;
+    straight_rail_horizontal: RailTypes;
+    curved_rail_vertical_right_bottom: RailTypes;
+    curved_rail_horizontal_left_bottom: RailTypes;
+    straight_rail_diagonal_left_top: RailTypes;
+    curved_rail_vertical_left_bottom: RailTypes;
+    straight_rail_diagonal_left_bottom: RailTypes;
+    straight_rail_vertical: RailTypes;
+    straight_rail_diagonal_right_top: RailTypes;
+    curved_rail_horizontal_right_top: RailTypes;
+    curved_rail_horizontal_right_bottom: RailTypes;
   };
+
+export interface RailTypes {
+  stone_path_background: SpriteData;
+  stone_path: SpriteData;
+  segment_visualisation_ending_back: SpriteData;
+  backplates: SpriteData;
+  segment_visualisation_continuing_front: SpriteData;
+  ties: SpriteData;
+  segment_visualisation_continuing_back: SpriteData;
+  segment_visualisation_ending_front: SpriteData;
+  metals: SpriteData;
+  segment_visualisation_middle: SpriteData;
+}
