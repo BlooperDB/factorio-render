@@ -4,6 +4,7 @@ import { EntityGridView } from "../../render/Blueprint";
 import AssemblingMachineRenderer from "../../render/renderers/assembling-machine.renderer";
 import GenericRenderer from "../../render/renderers/generic.renderer";
 import HeatPipeRenderer from "../../render/renderers/heat-pipe.renderer";
+import LabRenderer from "../../render/renderers/lab.renderer";
 import PipeToGroundRenderer from "../../render/renderers/pipe-to-ground.renderer";
 import PipeRenderer from "../../render/renderers/pipe.renderer";
 import TransportBeltRenderer from "../../render/renderers/transport-belt.renderer";
@@ -53,6 +54,8 @@ export interface EntityData {
   selection_box?: Array<Array<number>>;
   animation?: AnimationTypes;
   animations?: AnimationTypes;
+  off_animation?: AnimationTypes;
+  on_animation?: AnimationTypes;
   sprite?: SpriteTypes;
   sprites?: any;
   picture?: PictureTypes;
@@ -134,7 +137,7 @@ const renderers: { [key: string]: Renderer | undefined; } = {
   "rocket-silo": undefined,
   "gun-turret": undefined,
   "laser-turret": undefined,
-  "lab": undefined,
+  "lab": new LabRenderer(),
   "power-switch": undefined,
   "small-lamp": undefined,
   "roboport": undefined,

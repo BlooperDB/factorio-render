@@ -13,10 +13,8 @@ blueprint.render("sample.png", 0, false).then(() => {
   });*/
 });
 
-/*
-for (let i = 0; i < 64; i++) {
+for (let i = 0; i < 128; i++) {
   blueprint.render("output/animation_" + i + ".png", i).then(() => {
     console.log("Completed frame:", i);
   });
 }
-*/

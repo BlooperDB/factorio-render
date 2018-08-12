@@ -12,7 +12,8 @@
     "dev:watch": "ts-node-dev --respawn --no-notify src/index.ts",
     "build": "tsc",
     "lint": "tslint --project tsconfig.json",
-    "doc": "typedoc --name factorio-render --readme README.md --out docs/ src/"
+    "doc": "typedoc --name factorio-render --readme README.md --out docs/ src/",
+    "release": "standard-version"
   },
   "repository": {
     "type": "git",
@@ -32,6 +33,7 @@
   "homepage": "https://github.com/BlooperDB/factorio-render#readme",
   "devDependencies": {
     "pre-commit": "^1.2.2",
+    "standard-version": "^4.4.0",
     "ts-node": "^7.0.0",
     "tslint": "^5.11.0",
     "typedoc": "^0.11.1",
