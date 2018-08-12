@@ -2,11 +2,13 @@ import { Image } from "canvas";
 import { Vector } from "..";
 import { EntityGridView } from "../../render/Blueprint";
 import AssemblingMachineRenderer from "../../render/renderers/assembling-machine.renderer";
+import CurvedRailRenderer from "../../render/renderers/curved-rail.renderer";
 import GenericRenderer from "../../render/renderers/generic.renderer";
 import HeatPipeRenderer from "../../render/renderers/heat-pipe.renderer";
 import LabRenderer from "../../render/renderers/lab.renderer";
 import PipeToGroundRenderer from "../../render/renderers/pipe-to-ground.renderer";
 import PipeRenderer from "../../render/renderers/pipe.renderer";
+import StraightRailRenderer from "../../render/renderers/straight-rail.renderer";
 import TransportBeltRenderer from "../../render/renderers/transport-belt.renderer";
 import UndergroundBeltRenderer from "../../render/renderers/underground-belt.renderer";
 import WallRenderer from "../../render/renderers/wall.renderer";
@@ -97,8 +99,8 @@ export interface EntitySprite {
 const renderers: { [key: string]: Renderer | undefined; } = {
   "pipe": new PipeRenderer(),
   "stone-wall": new WallRenderer(),
-  "straight-rail": undefined,
-  "curved-rail": undefined,
+  "straight-rail": new StraightRailRenderer(),
+  "curved-rail": new CurvedRailRenderer(),
   "arithmetic-combinator": undefined,
   "decider-combinator": undefined,
   "constant-combinator": undefined,
