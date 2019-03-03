@@ -98,7 +98,7 @@ export interface EntitySprite {
 
 const renderers: { [key: string]: Renderer | undefined; } = {
   "pipe": new PipeRenderer(),
-  "stone-wall": new WallRenderer(),
+  // "stone-wall": new WallRenderer(), TODO Fix
   "straight-rail": new StraightRailRenderer(),
   "curved-rail": new CurvedRailRenderer(),
   "arithmetic-combinator": undefined,
@@ -109,9 +109,9 @@ const renderers: { [key: string]: Renderer | undefined; } = {
   "beacon": undefined,
   "electric-furnace": undefined,
   "centrifuge": undefined,
-  "transport-belt": new TransportBeltRenderer(),
-  "fast-transport-belt": new TransportBeltRenderer(),
-  "express-transport-belt": new TransportBeltRenderer(),
+  // "transport-belt": new TransportBeltRenderer(), TODO Fix
+  // "fast-transport-belt": new TransportBeltRenderer(),
+  // "express-transport-belt": new TransportBeltRenderer(),
   "train-stop": undefined,
   "heat-pipe": new HeatPipeRenderer(),
   "flamethrower-turret": undefined,

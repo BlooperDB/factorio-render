@@ -7,7 +7,10 @@ let entities: { [key: string]: Entity; };
 
 export function getData(): { [key: string]: any; } {
   if (!data) {
-    data = JSON.parse(fs.readFileSync("factorio/data.json").toString("UTF-8")).raw;
+    let rawText = fs.readFileSync("factorio/data.json").toString("UTF-8");
+    rawText = rawText.replace(/:-inf/g, ":0");
+    rawText = rawText.replace(/:inf/g, ":0");
+    data = JSON.parse(rawText).raw;
   }
 
   return data;

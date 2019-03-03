@@ -406,46 +406,57 @@ export class Blueprint {
         }
 
         if (addToConnected) {
-          connections.forEach((conn: any) => {
-            if ("max_underground_distance" in conn) {
+          connections.forEach((connData: any) => {
+            if ("max_underground_distance" in connData) {
               return;
             }
 
-            let vec = {
-              x: conn.position[0],
-              y: conn.position[1]
-            };
+            let toScan = [];
 
-            vec = this.rotateVector(vec, entity.direction || 0);
-
-            vec.x += entity.position.x;
-            vec.y += entity.position.y;
-
-            const entSize = getEntity(entity.name)!.getTileSize(entity);
-            const bb = {
-              min: {x: entity.position.x - entSize.x / 2, y: entity.position.y - entSize.y / 2},
-              max: {x: entity.position.x + entSize.x / 2, y: entity.position.y + entSize.y / 2},
-            };
-
-            if (this.isWithinBB(bb, {x: vec.x - 1, y: vec.y})) {
-              vec.x -= 0.5;
-            } else if (this.isWithinBB(bb, {x: vec.x + 1, y: vec.y})) {
-              vec.x += 0.5;
-            } else if (this.isWithinBB(bb, {x: vec.x, y: vec.y - 1})) {
-              vec.y -= 0.5;
-            } else if (this.isWithinBB(bb, {x: vec.x, y: vec.y + 1})) {
-              vec.y += 0.5;
+            if ("position" in connData) {
+              toScan = [connData.position];
+            } else {
+              toScan = connData.positions;
             }
 
-            if (fluids[vec.x] === undefined) {
-              fluids[vec.x] = {};
-            }
+            toScan.forEach((conn: any) => {
+              console.log(conn);
+              let vec = {
+                x: conn[0],
+                y: conn[1]
+              };
 
-            if (fluids[vec.x][vec.y] === undefined) {
-              fluids[vec.x][vec.y] = 0;
-            }
+              vec = this.rotateVector(vec, entity.direction || 0);
 
-            fluids[vec.x][vec.y] += 1;
+              vec.x += entity.position.x;
+              vec.y += entity.position.y;
+
+              const entSize = getEntity(entity.name)!.getTileSize(entity);
+              const bb = {
+                min: {x: entity.position.x - entSize.x / 2, y: entity.position.y - entSize.y / 2},
+                max: {x: entity.position.x + entSize.x / 2, y: entity.position.y + entSize.y / 2},
+              };
+
+              if (this.isWithinBB(bb, {x: vec.x - 1, y: vec.y})) {
+                vec.x -= 0.5;
+              } else if (this.isWithinBB(bb, {x: vec.x + 1, y: vec.y})) {
+                vec.x += 0.5;
+              } else if (this.isWithinBB(bb, {x: vec.x, y: vec.y - 1})) {
+                vec.y -= 0.5;
+              } else if (this.isWithinBB(bb, {x: vec.x, y: vec.y + 1})) {
+                vec.y += 0.5;
+              }
+
+              if (fluids[vec.x] === undefined) {
+                fluids[vec.x] = {};
+              }
+
+              if (fluids[vec.x][vec.y] === undefined) {
+                fluids[vec.x][vec.y] = 0;
+              }
+
+              fluids[vec.x][vec.y] += 1;
+            })
           });
         }
       }
@@ -453,7 +464,7 @@ export class Blueprint {
       if (e!.entity.heat_buffer || (e!.entity.energy_source && e!.entity.energy_source.connections)) {
         const connections: Array<any> = e!.entity.heat_buffer ? [...e!.entity.heat_buffer.connections] : [];
 
-        if (e!.entity.energy_source) {
+        if (e!.entity.energy_source && e!.entity.energy_source.connections) {
           connections.push(...e!.entity.energy_source.connections);
         }
 
