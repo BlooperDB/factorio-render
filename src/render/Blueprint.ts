@@ -457,7 +457,7 @@ export class Blueprint {
               }
 
               fluids[vec.x][vec.y] += 1;
-            })
+            });
           });
         }
       }
