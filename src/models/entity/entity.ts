@@ -80,14 +80,13 @@ export interface EntityData {
   circuit_connector_sprites: any;
   circuit_wire_connection_points: any;
   connector_frame_sprites: any;
-  belt_vertical: any;
   ending_bottom: any;
   starting_side: any;
   ending_side: any;
   starting_bottom: any;
   ending_top: any;
-  belt_horizontal: any;
   starting_top: any;
+  belt_animation_set: any;
 
 }
 
@@ -98,7 +97,7 @@ export interface EntitySprite {
 
 const renderers: { [key: string]: Renderer | undefined; } = {
   "pipe": new PipeRenderer(),
-  // "stone-wall": new WallRenderer(), TODO Fix
+  "stone-wall": new WallRenderer(),
   "straight-rail": new StraightRailRenderer(),
   "curved-rail": new CurvedRailRenderer(),
   "arithmetic-combinator": undefined,
@@ -109,9 +108,9 @@ const renderers: { [key: string]: Renderer | undefined; } = {
   "beacon": undefined,
   "electric-furnace": undefined,
   "centrifuge": undefined,
-  // "transport-belt": new TransportBeltRenderer(), TODO Fix
-  // "fast-transport-belt": new TransportBeltRenderer(),
-  // "express-transport-belt": new TransportBeltRenderer(),
+  "transport-belt": new TransportBeltRenderer(),
+  "fast-transport-belt": new TransportBeltRenderer(),
+  "express-transport-belt": new TransportBeltRenderer(),
   "train-stop": undefined,
   "heat-pipe": new HeatPipeRenderer(),
   "flamethrower-turret": undefined,
@@ -145,6 +144,8 @@ const renderers: { [key: string]: Renderer | undefined; } = {
   "roboport": undefined,
   "steam-turbine": undefined,
   "nuclear-reactor": undefined,
+  "locomotive": undefined,
+  "artillery-turret": undefined,
 };
 
 const genericRenderer = new GenericRenderer();

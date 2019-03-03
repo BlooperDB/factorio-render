@@ -13,7 +13,7 @@ export default class UndergroundBeltRenderer extends GenericRenderer {
     }
 
     let source = ent.entity.structure.direction_in.sheet;
-    let direction = entity.direction || 2;
+    let direction = entity.direction || 0;
 
     if (entity.type !== "input") {
       source = ent.entity.structure.direction_out.sheet;

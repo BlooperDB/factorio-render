@@ -30,7 +30,7 @@ export default class WallRenderer extends GenericRenderer {
         if (around[1]) {
           source = pictures.ending_right;
         } else if (around[2]) {
-          source = (pictures.straight_vertical as any)[0];
+          source = (pictures.straight_vertical as any);
         } else {
           source = pictures.ending_left;
         }
@@ -40,7 +40,7 @@ export default class WallRenderer extends GenericRenderer {
           if (around[1]) {
             source = pictures.ending_right;
           } else if (around[2]) {
-            source = (pictures.straight_vertical as any)[0];
+            source = (pictures.straight_vertical as any);
           } else if (around[3]) {
             source = pictures.ending_left;
           }
@@ -48,7 +48,7 @@ export default class WallRenderer extends GenericRenderer {
           if (around[2]) {
             source = pictures.corner_right_down;
           } else if (around[3]) {
-            source = (pictures.straight_horizontal as any)[0];
+            source = (pictures.straight_horizontal as any);
           }
         } else {
           source = pictures.corner_left_down;
@@ -60,7 +60,7 @@ export default class WallRenderer extends GenericRenderer {
         } else if (!around[1]) {
           source = pictures.corner_left_down;
         } else if (!around[2]) {
-          source = (pictures.straight_horizontal as any)[0];
+          source = (pictures.straight_horizontal as any);
         } else if (!around[3]) {
           source = pictures.corner_right_down;
         }

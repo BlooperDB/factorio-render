@@ -17,79 +17,101 @@ export default class TransportBeltRenderer extends GenericRenderer {
       return {};
     }
 
-    let source = ent.entity.belt_vertical;
-
-    if (entity.direction === 2 || entity.direction === 6) {
-      source = ent.entity.belt_horizontal;
-    }
+    const source = ent.entity.belt_animation_set;
 
     const around = this.getAround(entity.direction || 0, entity.position, grid);
     const count = around.reduce((a: number, b: number) => a + b, 0);
     const direction = entity.direction || 0;
 
-    let yPos = 0;
-    let rotation = 90;
+    let yPos = source.north_index;
 
-    switch (count) {
+    switch (direction) {
       default:
       case 0:
-      case 2:
-      case 3:
-        if (direction === 0 || direction === 4) {
-          rotation = 0;
-        }
+        yPos = source.north_index;
         break;
-      case 1:
-        if (around[0]) {
-          switch (direction) {
-            default:
-            case 0:
-            case 4:
-              rotation = 0;
-              break;
-            case 2:
-              yPos = 9;
-              break;
-            case 6:
-              yPos = 8;
-              rotation = 0;
-              break;
-          }
-        } else if (around[1]) {
-          if (direction === 0) {
-            yPos = 8;
-            rotation = 0;
-          } else if (direction === 4) {
-            yPos = 9;
-          }
-        } else if (around[2]) {
-          switch (direction) {
-            default:
-            case 0:
-            case 4:
-              rotation = 0;
-              break;
-            case 2:
-              yPos = 8;
-              rotation = 0;
-              break;
-            case 6:
-              yPos = 9;
-              break;
-          }
-        } else if (around[3]) {
-          if (direction === 0) {
-            yPos = 9;
-          } else if (direction === 4) {
-            yPos = 8;
-            rotation = 0;
-          }
-        }
+      case 2:
+        yPos = source.east_index;
+        break;
+      case 4:
+        yPos = source.south_index;
+        break;
+      case 6:
+        yPos = source.west_index;
         break;
     }
 
-    return this.loadSprite(source, entity, pass, "", highRes, animationFrame, grid, (canvas, ctx) => {
-      // TODO Bend based on surroundings
+    if (count === 1) {
+      if (around[0]) {
+        switch (direction) {
+          default:
+          case 0:
+            yPos = source.west_to_north_index;
+            break;
+          case 4:
+            yPos = source.south_index;
+            break;
+          case 2:
+            yPos = source.north_to_east_index;
+            break;
+          case 6:
+            yPos = source.north_to_west_index;
+            break;
+        }
+      } else if (around[1]) {
+        switch (direction) {
+          default:
+          case 0:
+            yPos = source.east_to_north_index;
+            break;
+          case 4:
+            yPos = source.east_to_south_index;
+            break;
+          case 2:
+            yPos = source.east_index;
+            break;
+          case 6:
+            yPos = source.west_index;
+            break;
+        }
+      } else if (around[2]) {
+        switch (direction) {
+          default:
+          case 0:
+            yPos = source.north_index;
+            break;
+          case 4:
+            yPos = source.south_index;
+            break;
+          case 2:
+            yPos = source.south_to_east_index;
+            break;
+          case 6:
+            yPos = source.south_to_west_index;
+            break;
+        }
+      } else if (around[3]) {
+        switch (direction) {
+          default:
+          case 0:
+            yPos = source.west_to_north_index;
+            break;
+          case 4:
+            yPos = source.west_to_south_index;
+            break;
+          case 2:
+            yPos = source.east_index;
+            break;
+          case 6:
+            yPos = source.west_index;
+            break;
+        }
+      }
+    }
+
+    yPos = yPos - 1;
+
+    return this.loadSprite(source.animation_set, entity, pass, "", highRes, animationFrame, grid, (canvas, ctx) => {
       const newCanvas = createCanvas(canvas.width, canvas.height);
       const newCtx = newCanvas.getContext("2d");
 
@@ -98,7 +120,6 @@ export default class TransportBeltRenderer extends GenericRenderer {
       }
 
       newCtx.translate(canvas.width / 2, canvas.height / 2);
-      newCtx.rotate((((entity.direction || 0) * 45) - rotation) * Math.PI / 180);
       newCtx.drawImage(canvas, (canvas.width / 2) * -1, (canvas.height / 2) * -1);
       return newCanvas;
     }, yPos);
