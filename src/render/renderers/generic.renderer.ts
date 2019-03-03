@@ -177,7 +177,6 @@ export default class GenericRenderer implements Renderer {
       return renderCache[key];
     }
 
-    console.log(file);
     let image = await loadImage(file);
 
     if (!image) {

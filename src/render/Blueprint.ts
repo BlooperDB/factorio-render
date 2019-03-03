@@ -105,16 +105,18 @@ export class Blueprint {
     ctx.font = "24px Arial Bold";
     ctx.textAlign = "center";
 
+    // TODO Font scaling
+
     // Width numbering
     for (let i = 1; i < size.width + 1; i++) {
-      ctx.fillText("" + i, i * scaling + (scaling / 2), scaling - 7, scaling - (scaling / 8));
-      ctx.fillText("" + i, i * scaling + (scaling / 2), canvas.height - 7, scaling - (scaling / 8));
+      ctx.fillText("" + i, i * scaling + (scaling / 2), scaling - 7);
+      ctx.fillText("" + i, i * scaling + (scaling / 2), canvas.height - 7);
     }
 
     // Height numbering
     for (let i = 1; i < size.height + 1; i++) {
-      ctx.fillText("" + i, scaling / 2, ((i + 1) * scaling) - 7, scaling - (scaling / 8));
-      ctx.fillText("" + i, canvas.width - (scaling / 2), ((i + 1) * scaling) - 7, scaling - (scaling / 8));
+      ctx.fillText("" + i, scaling / 2, ((i + 1) * scaling) - 7);
+      ctx.fillText("" + i, canvas.width - (scaling / 2), ((i + 1) * scaling) - 7);
     }
 
     // First pass: Rails
@@ -420,7 +422,6 @@ export class Blueprint {
             }
 
             toScan.forEach((conn: any) => {
-              console.log(conn);
               let vec = {
                 x: conn[0],
                 y: conn[1]
