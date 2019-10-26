@@ -21,7 +21,7 @@ declare module "canvas" {
 
   }
 
-  export interface CanvasRenderingContext2D extends CanvasPathMethods {
+  export interface CanvasRenderingContext2D extends CanvasPath {
     readonly canvas: HTMLCanvasElement;
     fillStyle: string | CanvasGradient | CanvasPattern;
     font: string;
