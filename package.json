@@ -33,7 +33,7 @@
   "homepage": "https://github.com/BlooperDB/factorio-render#readme",
   "devDependencies": {
     "pre-commit": "^1.2.2",
-    "standard-version": "^4.4.0",
+    "standard-version": "^8.0.1",
     "ts-node": "^7.0.0",
     "ts-node-dev": "^1.0.0-pre.26",
     "tslint": "^5.11.0",
